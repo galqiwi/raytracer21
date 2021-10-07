@@ -45,7 +45,7 @@ class Camera {
   }
 
   image::IImagePtr TakePhoto(image::IImagePtr film, size_t chunk_w = 100,
-                             size_t chunk_h = 100, size_t n_workers = 2) {
+                             size_t chunk_h = 100, size_t n_workers = 16) {
     auto thread_pool = multithreading::MakeThreadPool(n_workers);
     ChunkCounter counter;
     for (size_t chunk_y = 0; chunk_y < film->Height(); chunk_y += chunk_h) {
