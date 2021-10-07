@@ -1,12 +1,15 @@
 #include <memory>
+#include <mutex>
+#include <deque>
 
 #include "raytracer/Scene.hpp"
 #include "raytracer/objects/Sphere.hpp"
 #include "raytracer/Camera.hpp"
 
 #include "image/PPMImage.hpp"
-#include "raytracer/Plain.hpp"
+#include "raytracer/surfaces/Plain.hpp"
 #include "raytracer/surfaces/Phong.hpp"
+#include "threadpool/ThreadPool.hpp"
 
 int main() {
   Scene<double> scene;
@@ -31,5 +34,5 @@ int main() {
                                                       M_PI / 3 * 1080 / 1080,
                                                       &scene});
 
-  camera.TakePhoto(image::MakePPMImage(1000, 1000))->Save("test.ppm");
+  camera.TakePhoto(image::MakePPMImage(500, 500))->Save("test.ppm");
 }

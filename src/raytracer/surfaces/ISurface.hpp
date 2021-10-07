@@ -5,6 +5,7 @@
 #ifndef RAY_TRACER_21_ISURFACE_HPP
 #define RAY_TRACER_21_ISURFACE_HPP
 
+#include <exception>
 #include "../../math3d/Vector3D.hpp"
 #include "../Traceable.h"
 
