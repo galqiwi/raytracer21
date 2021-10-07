@@ -3,4 +3,4 @@ project(ray_tracer_21)
 
 set(CMAKE_CXX_STANDARD 17)
 
-add_executable(ray_tracer_21 raytracer/main.cpp raytracer/Scene.hpp raytracer/Vector3D.hpp raytracer/Color.cpp raytracer/Color.hpp raytracer/IObject.hpp raytracer/Sphere.hpp image/IImage.cpp image/IImage.hpp image/PPMImage.cpp image/PPMImage.hpp raytracer/Camera.cpp raytracer/Camera.hpp raytracer/Plain.hpp)
+add_executable(ray_tracer_21 src/main.cpp src/raytracer/Scene.hpp src/math3d/Vector3D.hpp src/raytracer/Color.cpp src/raytracer/Color.hpp src/raytracer/objects/IObject.hpp src/raytracer/objects/Sphere.hpp src/image/IImage.hpp src/image/PPMImage.cpp src/image/PPMImage.hpp src/raytracer/Camera.hpp src/raytracer/Plain.hpp src/raytracer/surfaces/ISurface.hpp src/raytracer/Traceable.h src/raytracer/surfaces/Phong.hpp)

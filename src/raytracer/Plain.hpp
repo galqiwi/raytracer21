@@ -5,18 +5,17 @@
 #ifndef RAY_TRACER_21_PLAIN_HPP
 #define RAY_TRACER_21_PLAIN_HPP
 
-#include "IObject.hpp"
+#include "objects/IObject.hpp"
 
 namespace objects {
 
 template <typename CoordType>
 class Plain : public objects::IObject<CoordType> {
  public:
-  Plain(math::Vector3D<CoordType> norm, math::Vector3D<CoordType> point):
-      norm_(norm), point_(point) {
-
+  Plain(math3d::Vector3D<CoordType> norm, math3d::Vector3D<CoordType> point)
+      : norm_(norm), point_(point) {
   }
-  std::optional<CoordType> Intersects(math::Ray<CoordType> ray) {
+  std::optional<CoordType> Intersects(math3d::Ray<CoordType> ray) {
     CoordType dist = ((point_ - ray.point) * norm_) / (ray.direction * norm_);
     if (dist > 0) {
       return dist;
@@ -25,12 +24,12 @@ class Plain : public objects::IObject<CoordType> {
     }
   }
 
-  virtual Color IntersectColor(math::Ray<CoordType> ray) {
+  virtual Color IntersectColor(math3d::Ray<CoordType> ray) {
     auto intersection = Intersects(ray);
     assert(intersection.has_value());  // TODO: rise error
 
-    math::Vector3D<CoordType> hit =
-        ray.point + math::Norm(ray.direction) * intersection.value();
+    math3d::Vector3D<CoordType> hit =
+        ray.point + math3d::Norm(ray.direction) * intersection.value();
 
     int x = static_cast<int>(std::floor(hit.x));
     int z = static_cast<int>(std::floor(hit.z));
@@ -41,10 +40,10 @@ class Plain : public objects::IObject<CoordType> {
   }
 
  private:
-  math::Vector3D<CoordType> norm_;
-  math::Vector3D<CoordType> point_;
+  math3d::Vector3D<CoordType> norm_;
+  math3d::Vector3D<CoordType> point_;
 };
 
-}
+}  // namespace objects
 
 #endif  // RAY_TRACER_21_PLAIN_HPP

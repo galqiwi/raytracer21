@@ -8,7 +8,7 @@
 #include <math.h>
 
 class Vector3D;
-namespace math {
+namespace math3d {
 
 template <typename T>
 struct Vector3D {
@@ -82,6 +82,40 @@ T Abs(Vector3D<T> v) {
 }
 
 template <typename T>
+Vector3D<T> NormAndRotate90(Vector3D<T> v) {
+  Vector3D<T> ex = {1, 0, 0};
+  Vector3D<T> ey = {1, 0, 0};
+  if (abs(ex * v) < abs(ey * v)) {
+    return Norm(ex % v);
+  } else {
+    return Norm(ey % v);
+  }
+}
+
+template <typename T>
+T RandomUniform() {
+  return static_cast<T>(rand()) / static_cast<float>(RAND_MAX);
+}
+
+template <typename T>
+Vector3D<T> RandomUnitVector() {
+  while (true) {
+    Vector3D<T> out = {RandomUniform<T>() * 2 - 1, RandomUniform<T>() * 2 - 1,
+                       RandomUniform<T>() * 2 - 1};
+
+    if (Abs2(out) < 1 || Abs2(out) > 0.01) {
+      return Norm(out);
+    }
+  }
+}
+
+template <typename T>
+Vector3D<T> ChangeBasis(Vector3D<T> src, Vector3D<T> ex, Vector3D<T> ey,
+                        Vector3D<T> ez) {
+  return src.x * ex + src.y * ey + src.z * ez;
+}
+
+template <typename T>
 std::ostream& operator<<(std::ostream& out, Vector3D<T> v) {
   out << v.x << " " << v.y << " " << v.z;
   return out;
@@ -90,8 +124,9 @@ std::ostream& operator<<(std::ostream& out, Vector3D<T> v) {
 template <typename T>
 struct Ray {
   Vector3D<T> point, direction;
+  size_t lifetime{0};
 };
 
-}  // namespace math
+}  // namespace math3d
 
 #endif  // RAY_TRACER_21_VECTOR3D_HPP

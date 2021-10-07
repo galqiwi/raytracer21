@@ -9,8 +9,7 @@
 #include <cstddef>
 #include <string>
 #include <iostream>
-#include "../raytracer/Color.hpp" // TODO: fix
-
+#include "../raytracer/Color.hpp"
 namespace image {
 
 class IImage {
@@ -23,6 +22,6 @@ class IImage {
 
 using IImagePtr = std::shared_ptr<IImage>;
 
-}
+}  // namespace image
 
 #endif  // RAY_TRACER_21_IIMAGE_HPP

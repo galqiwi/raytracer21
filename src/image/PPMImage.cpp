@@ -9,10 +9,10 @@
 
 namespace image {
 
-class PPMImage: public IImage {
+class PPMImage : public IImage {
  public:
-  PPMImage(size_t w, size_t h):
-        w_(w), h_(h), data_(w, std::vector<Color>(h, Color::Default())) {
+  PPMImage(size_t w, size_t h)
+      : w_(w), h_(h), data_(w, std::vector<Color>(h, Color::Default())) {
   }
 
   void Set(size_t x, size_t y, Color c) {
@@ -32,7 +32,8 @@ class PPMImage: public IImage {
   void Save(const std::string filename) {
     std::ofstream fout(filename);
 
-    fout << "P3" << "\n";
+    fout << "P3"
+         << "\n";
     fout << w_ << " " << h_ << "\n";
     fout << 255 << "\n";
     for (int y = 0; y < h_; ++y) {
@@ -42,21 +43,23 @@ class PPMImage: public IImage {
     }
 
     fout << std::flush;
-
   }
 
  private:
   void PrintPixel(std::ostream& out, Color color) {
-    out << (int)(color.r * 255) << " ";
-    out << (int)(color.g * 255) << " ";
-    out << (int)(color.b * 255) << "\n";
+    PrintSubPixel(out, color.r);
+    PrintSubPixel(out, color.g);
+    PrintSubPixel(out, color.b);
+  }
+  void inline PrintSubPixel(std::ostream& out, double sub_color) {
+    out << std::max(0, std::min(255, (int)(sub_color * 255))) << " ";
   }
   size_t w_, h_;
   std::vector<std::vector<Color>> data_;
 };
 
 IImagePtr MakePPMImage(size_t w, size_t h) {
-  return std::make_shared<PPMImage>(w, h); // TODO: localization
+  return std::make_shared<PPMImage>(w, h);
 }
 
-}
+}  // namespace image

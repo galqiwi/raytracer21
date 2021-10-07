@@ -9,13 +9,14 @@
 #include <optional>
 #include <vector>
 #include "Color.hpp"
-#include "Vector3D.hpp"
-#include "IObject.hpp"
+#include "../math3d/Vector3D.hpp"
+#include "objects/IObject.hpp"
+#include "Traceable.h"
 
 template <typename CoordType>
-class Scene {
+class Scene : public Traceable<CoordType> {
  public:
-  Color Trace(math::Ray<CoordType> ray) {
+  Color Trace(math3d::Ray<CoordType> ray) {
     std::optional<CoordType> min_distance{std::nullopt};
     objects::IObjectPtr<CoordType> closest_object{nullptr};
 

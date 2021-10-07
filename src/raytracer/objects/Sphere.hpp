@@ -6,14 +6,14 @@
 #define RAY_TRACER_21_SPHERE_HPP
 
 #include <assert.h>
-#include "Vector3D.hpp"
+#include "../../math3d/Vector3D.hpp"
 #include "IObject.hpp"
 
 namespace objects {
 
 template <typename CoordType>
 class Sphere : public IObject<CoordType> {
-  using Vector3D = math::Vector3D<CoordType>;
+  using Vector3D = math3d::Vector3D<CoordType>;
 
  public:
   explicit Sphere(Vector3D position, CoordType radius)
@@ -22,13 +22,18 @@ class Sphere : public IObject<CoordType> {
 
         };
 
-  std::optional<CoordType> Intersects(math::Ray<CoordType> ray) {
+  std::optional<CoordType> Intersects(math3d::Ray<CoordType> ray) {
     auto distance = Abs(position_ - ray.point);
     if (distance < radius_) {
       return {0};
     }
 
     auto cos = ray.direction * Norm(position_ - ray.point);
+
+    if (cos < 0) {
+      return {std::nullopt};
+    }
+
     auto discriminant =
         pow(distance * cos, 2) - pow(distance, 2) + pow(radius_, 2);
     if (discriminant < 0) {
@@ -38,15 +43,15 @@ class Sphere : public IObject<CoordType> {
     return std::max((distance * cos) - sqrt(discriminant), CoordType{0});
   }
 
-  virtual Color IntersectColor(math::Ray<CoordType> ray) {
+  virtual Color IntersectColor(math3d::Ray<CoordType> ray) {
     auto intersection = Intersects(ray);
     assert(intersection.has_value());  // TODO: rise error
 
-    math::Vector3D<CoordType> hit =
-        ray.point + math::Norm(ray.direction) * intersection.value();
+    math3d::Vector3D<CoordType> hit =
+        ray.point + math3d::Norm(ray.direction) * intersection.value();
 
-    auto intensity = pow((position_ - hit) * Norm(ray.direction), 2);
-    return {intensity, intensity, intensity};
+    auto norm = math3d::Norm(hit - position_);
+    return this->GetSurface()->GetColor(ray, norm, hit);
   }
 
  private:
