@@ -32,18 +32,17 @@ class ThreadPoolQueue {
   std::mutex mutex_;
 };
 
-struct ThreadPoolIsNotCoolEnough: public std::exception {
+struct ThreadPoolIsNotCoolEnough : public std::exception {
   const char* what() const throw() {
     return "This thread pool is not cool enough to submit task after run";
   }
 };
 
 // you can not submit after run
-class ThreadPool: public IThreadPool {
+class ThreadPool : public IThreadPool {
  public:
-
-  explicit ThreadPool(size_t n_workers): n_workers_(n_workers), in_progress_(false) {
-
+  explicit ThreadPool(size_t n_workers)
+      : n_workers_(n_workers), in_progress_(false) {
   }
 
   void SubmitTask(Task task) {
@@ -66,10 +65,11 @@ class ThreadPool: public IThreadPool {
         }
       });
     }
-    for (auto& worker: workers) {
+    for (auto& worker : workers) {
       worker.join();
     }
   };
+
  private:
   std::atomic<bool> in_progress_;
   ThreadPoolQueue queue_;
@@ -80,4 +80,4 @@ IThreadPoolPtr MakeThreadPool(size_t n_workers) {
   return std::make_shared<ThreadPool>(n_workers);
 }
 
-}
+}  // namespace multithreading

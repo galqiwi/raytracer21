@@ -25,6 +25,6 @@ class ISurface {
 template <typename CoordType>
 using ISurfacePtr = std::shared_ptr<ISurface<CoordType>>;
 
-}  // namespace objects
+}  // namespace surfaces
 
 #endif  // RAY_TRACER_21_ISURFACE_HPP

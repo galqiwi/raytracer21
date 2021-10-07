@@ -11,7 +11,7 @@
 
 namespace objects {
 
-struct NoIntersection: public std::exception {
+struct NoIntersection : public std::exception {
   const char* what() const throw() {
     return "There is no intersection between a ray and an object";
   }
@@ -22,7 +22,6 @@ class IObject : public std::enable_shared_from_this<IObject<CoordType>> {
   using IObjectPtr = std::shared_ptr<IObject<CoordType>>;
 
  public:
-
   virtual std::optional<CoordType> Intersects(math3d::Ray<CoordType> ray) = 0;
   virtual Color IntersectColor(math3d::Ray<CoordType> ray) = 0;
 

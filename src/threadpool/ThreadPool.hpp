@@ -26,6 +26,6 @@ using IThreadPoolPtr = std::shared_ptr<IThreadPool>;
 
 IThreadPoolPtr MakeThreadPool(size_t n_workers);
 
-}
+}  // namespace multithreading
 
 #endif  // RAY_TRACER_21_THREADPOOL_HPP

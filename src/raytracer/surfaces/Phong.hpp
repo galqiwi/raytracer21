@@ -64,6 +64,6 @@ class Phong : public surfaces::ISurface<CoordType> {
   size_t n_reflections_;
 };
 
-}  // namespace objects
+}  // namespace surfaces
 
 #endif  // RAY_TRACER_21_PHONG_HPP
