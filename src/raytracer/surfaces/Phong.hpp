@@ -12,7 +12,7 @@ namespace surfaces {
 template <typename CoordType>
 class Phong : public surfaces::ISurface<CoordType> {
  public:
-  Phong(double ambient, double diffuse, double specular,
+  Phong(Color ambient, double diffuse, double specular,
         Traceable<CoordType>* scene, size_t n_reflections)
       : ambient_(ambient),
         diffuse_(diffuse),
@@ -23,10 +23,8 @@ class Phong : public surfaces::ISurface<CoordType> {
 
   Color GetColor(math3d::Ray<CoordType> ray, math3d::Vector3D<CoordType> norm,
                  math3d::Vector3D<CoordType> hit) {
-    Color ambient = {ambient_, ambient_, ambient_};
-
-    if (ray.lifetime > 0) {
-      return ambient;
+    if (ray.lifetime > 2) {
+      return ambient_;
     }
 
     auto ey = norm;
@@ -37,7 +35,7 @@ class Phong : public surfaces::ISurface<CoordType> {
     Color specular{0, 0, 0};
 
     if (n_reflections_ == 0) {
-      return ambient;
+      return ambient_;
     }
 
     for (size_t i = 0; i < n_reflections_; ++i) {
@@ -56,26 +54,30 @@ class Phong : public surfaces::ISurface<CoordType> {
       specular = specular + intensity * specular_intensity;
     }
 
-    return ambient + diffuse * (diffuse_ / n_reflections_) +
+    return ambient_ + diffuse * (diffuse_ / n_reflections_) +
            specular * (specular_ / n_reflections_);
   }
 
  private:
-  double ambient_;
+  Color ambient_;
   double diffuse_;
   double specular_;
   Traceable<CoordType>* scene_;
   size_t n_reflections_;
 };
 
-template<typename CoordType>
-ISurfacePtr<CoordType> MakeGlowingSurface(CoordType intensity, Traceable<CoordType>* scene) {
-  return std::make_shared<Phong<CoordType>>(intensity, 0, 0, scene, 0);
+template <typename CoordType>
+ISurfacePtr<CoordType> MakeGlowingSurface(Color color,
+                                          Traceable<CoordType>* scene) {
+  return std::make_shared<Phong<CoordType>>(color, 0.5, 0.5, scene, 0);
 }
 
-template<typename CoordType>
-ISurfacePtr<CoordType> MakeOpaqueSurface(CoordType opacity, CoordType gloss, Traceable<CoordType>* scene, size_t quality) {
-  return std::make_shared<Phong<CoordType>>(0, opacity, gloss, scene, quality);
+template <typename CoordType>
+ISurfacePtr<CoordType> MakeOpaqueSurface(CoordType opacity, CoordType gloss,
+                                         Traceable<CoordType>* scene,
+                                         size_t quality) {
+  return std::make_shared<Phong<CoordType>>(Color{0, 0, 0}, opacity, gloss,
+                                            scene, quality);
 }
 
 }  // namespace surfaces

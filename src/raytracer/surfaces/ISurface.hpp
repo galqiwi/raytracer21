@@ -7,7 +7,7 @@
 
 #include <exception>
 #include "../../math3d/Vector3D.hpp"
-#include "../Traceable.h"
+#include "../Traceable.hpp"
 
 namespace surfaces {
 

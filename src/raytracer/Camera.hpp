@@ -86,6 +86,14 @@ class Camera {
 
     Color color = parameters_.scene->Trace(
         math3d::Ray<CoordType>{parameters_.position, ray_direction});
+
+    double abs = std::max(std::max(std::abs(color.r), std::abs(color.g)),
+                          std::abs(color.b));
+
+    if (abs > 1) {
+      color = color / abs;
+    }
+
     film->Set(x, film->Height() - 1 - y, color);
   }
 

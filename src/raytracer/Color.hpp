@@ -15,6 +15,8 @@ Color operator+(Color a, Color b);
 
 Color operator*(Color a, double c);
 
+Color operator/(Color a, double c);
+
 std::ostream& operator<<(std::ostream& out, const Color& color);
 
 #endif  // RAY_TRACER_21_COLOR_HPP

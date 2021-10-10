@@ -11,11 +11,17 @@
 #include "Color.hpp"
 #include "../math3d/Vector3D.hpp"
 #include "objects/IObject.hpp"
-#include "Traceable.h"
+#include "Traceable.hpp"
 
 template <typename CoordType>
 class Scene : public Traceable<CoordType> {
  public:
+  Scene() : sky_(std::nullopt) {
+  }
+
+  Scene(TraceablePtr<CoordType> sky) : sky_(sky) {
+  }
+
   Color Trace(math3d::Ray<CoordType> ray) {
     std::optional<CoordType> min_distance{std::nullopt};
     objects::IObjectPtr<CoordType> closest_object{nullptr};
@@ -34,7 +40,11 @@ class Scene : public Traceable<CoordType> {
     if (min_distance.has_value()) {
       return closest_object->IntersectColor(ray);
     } else {
-      return Color::Default();
+      if (sky_.has_value()) {
+        return sky_.value()->Trace(ray);
+      } else {
+        return Color::Default();
+      }
     }
   }
 
@@ -44,6 +54,7 @@ class Scene : public Traceable<CoordType> {
 
  private:
   std::vector<objects::IObjectPtr<CoordType>> objects_;
+  std::optional<TraceablePtr<CoordType>> sky_;
 };
 
 #endif  // RAY_TRACER_21_SCENE_HPP

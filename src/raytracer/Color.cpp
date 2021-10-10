@@ -21,3 +21,7 @@ Color operator+(Color a, Color b) {
 Color operator*(Color a, double c) {
   return {a.r * c, a.g * c, a.b * c};
 }
+
+Color operator/(Color a, double c) {
+  return a * (1 / c);
+}

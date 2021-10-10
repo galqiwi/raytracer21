@@ -11,6 +11,8 @@ namespace image {
 
 IImagePtr MakePPMImage(size_t w, size_t h);
 
-}
+IImagePtr MakePPMImage(const char*);
+
+}  // namespace image
 
 #endif  // RAY_TRACER_21_PPMIMAGE_HPP

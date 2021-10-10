@@ -17,11 +17,34 @@ class PPMImage : public IImage {
       : w_(w), h_(h), data_(w, std::vector<Color>(h, Color{0, 1, 0})) {
   }
 
+  explicit PPMImage(const char* filename) {
+    std::ifstream fin(filename);
+    std::string type, tmp_buffer;
+    fin >> type;
+    assert(type == "P3" || type == "P6");
+    fin >> w_ >> h_;
+    fin >> tmp_buffer;
+    assert(tmp_buffer == "255");
+    data_ = std::vector<std::vector<Color>>(w_, std::vector<Color>(h_));
+    if (type == "P3") {
+      ReadP3(fin);
+    } else {
+      ReadP6(fin);
+    }
+  }
+
   void Set(size_t x, size_t y, Color c) {
     std::unique_lock<std::shared_mutex> lock(mutex_);
     assert(0 <= x && x < w_);
     assert(0 <= y && y < h_);
     data_[x][y] = c;
+  }
+
+  Color Get(size_t x, size_t y) {
+    std::unique_lock<std::shared_mutex> lock(mutex_);
+    assert(0 <= x && x < w_);
+    assert(0 <= y && y < h_);
+    return data_[x][y];
   }
 
   size_t Width() const {
@@ -52,6 +75,24 @@ class PPMImage : public IImage {
   }
 
  private:
+  void ReadP3(std::istream& fin) {
+    for (int y = 0; y < h_; ++y) {
+      for (int x = 0; x < w_; ++x) {
+        fin >> data_[x][y].r >> data_[x][y].g >> data_[x][y].b;
+      }
+    }
+  }
+
+  void ReadP6(std::istream& fin) {
+    for (int y = 0; y < h_; ++y) {
+      for (int x = 0; x < w_; ++x) {
+        uint8_t r, g, b;
+        fin >> std::noskipws >> b >> r >> g;
+        data_[x][y] = Color{r / 255., g / 255., b / 255.};
+      }
+    }
+  }
+
   void PrintPixel(std::ostream& out, Color color) {
     PrintSubPixel(out, color.r);
     PrintSubPixel(out, color.g);
@@ -69,6 +110,10 @@ class PPMImage : public IImage {
 
 IImagePtr MakePPMImage(size_t w, size_t h) {
   return std::make_shared<PPMImage>(w, h);
+}
+
+IImagePtr MakePPMImage(const char* filename) {
+  return std::make_shared<PPMImage>(filename);
 }
 
 }  // namespace image
